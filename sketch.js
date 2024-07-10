@@ -1,26 +1,32 @@
 let game;
 
 function preload() {
-  //configHelper.expandGameConfig(pokemonGameConfig);
-  //game = new Game(pokemonGameConfig);
+  config = {}
+  config.consts = {};
+  config.consts.xResolution = 800;
+  config.consts.yResolution = 600;
+  config.consts.minScaleFactor = .5;
+  config.consts.maxScaleFactor = 3;
+  //configHelper.expandGameConfig(gameConfig);
+  game = new Game(config);
 }
 
 function setup() {
-  //game.setup();
+  game.setup();
 }
 
 function draw() {
   let deltaT = deltaTime;
-  //game.update(deltaT);
-  //game.draw(deltaT);
+  game.update(deltaT);
+  game.draw(deltaT);
 }
 
 function mouseClicked() {
-  //game.mouseClicked();
+  game.mouseClicked();
 }
 
 function windowResized() {
-  //game.windowResized();
+  game.windowResized();
 }
 
 function touchEnded() {
