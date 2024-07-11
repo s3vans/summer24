@@ -78,6 +78,7 @@ class Game {
     }
 
     if (this.state.firstUpdate) {
+      this.animation = loadAnimationFromConfig(this.config.fighters.subzero.imgs.standing);
       // Do first time stuff.
       this.state.firstUpdate = false;
     }
@@ -104,6 +105,8 @@ class Game {
     //    }
     //  }
     //}
+
+    this.animation.update();
   }
 
   _scaleMouse(pos) {
@@ -139,6 +142,11 @@ class Game {
     }
 
     background(100);
+    if (this.animation != null) {
+      let scaledMouseX = this._scaleMouse(mouseX);
+      let scaledMouseY = this._scaleMouse(mouseY);
+      this.animation.draw(scaledMouseX, scaledMouseY, 66, 133);
+    }
 
     // ...
   }
@@ -175,8 +183,6 @@ class Game {
       return;
     }
 
-    let scaledMouseX = this._scaleMouse(mouseX);
-    let scaledMouseY = this._scaleMouse(mouseY);
     return;
   }
 

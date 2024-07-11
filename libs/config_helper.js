@@ -35,6 +35,7 @@ class ConfigHelper {
 
   _expandFighterConfig(expandedGameConfig, rootDir, uid, fighterConfig) {
     fighterConfig.consts = {};
+    fighterConfig.consts.defaultFrameHeight = 133;
     fighterConfig.consts.defaultFps = 12;
     fighterConfig.consts.defaultIsLooping = true;
 
