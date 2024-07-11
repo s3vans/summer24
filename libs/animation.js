@@ -43,6 +43,7 @@ class Animation {
   }
 
   reset() {
+    this.lastFrameTime = null;
     this.currentFrameNum = 0;
     this.isDone = false;
   }

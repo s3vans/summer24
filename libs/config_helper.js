@@ -51,7 +51,33 @@ class ConfigHelper {
       "fps": fighterConfig.consts.defaultFps,
       "isLooping": fighterConfig.consts.defaultIsLooping,
     }
-    let modes = ["standing"];
+    let modes = [
+        "walk_forward",
+        "walk_backward",
+        "standing",
+        "standing_punch",
+        "standing_kick",
+        "standing_block",
+        "standing_hit",
+        "upper_cut",
+        "spinkick",
+        "spinkick_blocked",
+        "leg_sweep",
+        "ducking",
+        "ducking_kick",
+        "ducking_block",
+        "ducking_hit",
+        "jumping_up",
+        "jumping_around",
+        "jumping_punch",
+        "jumping_kick",
+        "falling_back",
+        "falling_sweep",
+        "hopping_up",
+        "special",
+        "dizzy",
+        "victory",
+    ];
     for (let mode of modes) {
       helper.expandAssetPath(fighterConfig.imgs, mode, rootDir, uid, "png");
       // NOTE: loadAnimationFromConfig() updates the |img| value asynchronously
