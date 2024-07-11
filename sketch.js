@@ -1,14 +1,8 @@
 let game;
 
 function preload() {
-  config = {}
-  config.consts = {};
-  config.consts.xResolution = 800;
-  config.consts.yResolution = 600;
-  config.consts.minScaleFactor = .5;
-  config.consts.maxScaleFactor = 3;
-  //configHelper.expandGameConfig(gameConfig);
-  game = new Game(config);
+  configHelper.expandGameConfig(gameConfig);
+  game = new Game(gameConfig);
 }
 
 function setup() {
