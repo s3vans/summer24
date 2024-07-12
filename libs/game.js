@@ -168,16 +168,24 @@ class Game {
     }
 
     background(100);
-    line(0, 100, width, 100);
-    line(0, 233, width, 233);
-    circle(110, 233, 10);
-    circle(155, 233, 10);
-    let curr = this.curr_animation % this.animations.length;
-    if (this.animations[curr] != null) {
-      let scaledMouseX = this._scaleMouse(mouseX);
-      let scaledMouseY = this._scaleMouse(mouseY);
-      //this.animations[curr].draw(scaledMouseX+30, scaledMouseY+30);
-      this.animations[curr].draw(100, 100);
+
+    // This is setup to calibrate ~133px tall fighters.
+    let calibration_mode = true;
+    if (calibration_mode) {
+      push();
+      fill(255, 255, 255);
+      line(0, 100, width, 100);
+      line(0, 233, width, 233);
+      circle(110, 233, 10);
+      circle(155, 233, 10);
+      let curr = this.curr_animation % this.animations.length;
+      if (this.animations[curr] != null) {
+        let scaledMouseX = this._scaleMouse(mouseX);
+        let scaledMouseY = this._scaleMouse(mouseY);
+        //this.animations[curr].draw(scaledMouseX+30, scaledMouseY+30);
+        this.animations[curr].draw(100, 100);
+      }
+      pop();
     }
 
     // ...

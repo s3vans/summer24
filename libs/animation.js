@@ -126,12 +126,14 @@ class Animation {
     // being displayed.
     let show_debug = false;
     if (show_debug) {
+      push();
       image(this.img, 0, 0, srcWidth, this.img.height);
       strokeWeight(1);
       stroke(255, 0, 0);
       noFill();
       rect(srcX, srcY, srcWidth, srcHeight);
       console.log(this.frameHeight, this.currentFrameNum, srcX, srcY);
+      pop();
     }
   }
 }
