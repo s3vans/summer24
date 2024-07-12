@@ -25,15 +25,42 @@ function loadAnimationFromConfig(animationConfig, defaultAnimationConfig) {
     return null;
   }
 
-  return new Animation(animationConfig.img, frameHeight, fps, isLooping);
+  adjustments = {}
+  if (config.xOffset != undefined) {
+    adjustments.xOffset = config.xOffset;
+  }
+  if (config.yOffset != undefined) {
+    adjustments.yOffset = config.yOffset;
+  }
+  if (config.scaleOffset != undefined) {
+    adjustments.scaleOffset = config.scaleOffset;
+  }
+
+  return new Animation(animationConfig.img, frameHeight, fps, isLooping,
+                       adjustments);
 }
 
 class Animation {
-  constructor(img, frameHeight, fps, isLooping) {
+  constructor(img, frameHeight, fps, isLooping, adjustments) {
     this.img = img;
     this.frameHeight = frameHeight;
     this.fps = fps;
     this.isLooping = isLooping;
+
+    this.xOffset = 0;
+    this.yOffset = 0;
+    this.scaleOffset = 1;
+    if (adjustments != undefined) {
+      if (adjustments.xOffset != undefined) {
+        this.xOffset = adjustments.xOffset;
+      }
+      if (adjustments.yOffset != undefined) {
+        this.yOffset = adjustments.yOffset;
+      }
+      if (adjustments.scaleOffset != undefined) {
+        this.scaleOffset = adjustments.scaleOffset;
+      }
+    }
 
     this.numFrames = null;
     this.lastFrameTime = null;
@@ -75,7 +102,7 @@ class Animation {
     }
   }
 
-  draw(x, y, width, height) {
+  draw(x, y) {
     if (this.img == null) {
       return;
     }
@@ -83,6 +110,28 @@ class Animation {
     let srcY = this.frameHeight * this.currentFrameNum;
     let srcWidth = this.img.width;
     let srcHeight = this.frameHeight;
-    image(this.img, x, y, width, height, srcX, srcY, srcWidth, srcHeight);
+
+    // There is a lot of weirdness regarding drawing from a source image
+    // related to a destination image with mismatched sizes. It doesn't stretch
+    // and scale the image in the way I would have hoped.  I found it better to
+    // draw the image at its original size, optionally scaled by a factor. The
+    // COVER and LEFT, LEFT params are the closest to what I wanted, but there
+    // is no STRETCH mode. This seems to work well enough.
+    image(this.img, x+this.xOffset, y+this.yOffset,
+          srcWidth*this.scaleOffset, srcHeight*this.scaleOffset,
+          srcX, srcY, srcWidth, srcHeight, COVER, LEFT, LEFT);
+
+    // This was some useful debugging code when the scaling wasn't WAI. It
+    // shows the entire animation strip and the boundary box around what is
+    // being displayed.
+    let show_debug = false;
+    if (show_debug) {
+      image(this.img, 0, 0, srcWidth, this.img.height);
+      strokeWeight(1);
+      stroke(255, 0, 0);
+      noFill();
+      rect(srcX, srcY, srcWidth, srcHeight);
+      console.log(this.frameHeight, this.currentFrameNum, srcX, srcY);
+    }
   }
 }
