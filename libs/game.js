@@ -10,6 +10,8 @@ class Game {
 
     this.resetState();
     this.state.gameState = "PREGAME";
+    this.state.fighters = {};
+    this.state.fighter = undefined;
   }
 
   resetState() {
@@ -78,33 +80,40 @@ class Game {
 
     if (this.state.firstUpdate) {
       // Do first time stuff.
-      this.animations = [];
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.walk_forward));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.walk_backward));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.standing));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.standing_punch));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.standing_kick));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.standing_block));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.standing_hit));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.upper_cut));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.spinkick));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.spinkick_blocked));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.leg_sweep));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.ducking));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.ducking_kick));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.ducking_block));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.ducking_hit));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.jumping_up));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.jumping_around));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.jumping_punch));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.jumping_kick));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.falling_back));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.falling_sweep));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.hopping_up));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.special));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.dizzy));
-      this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.victory));
-      this.curr_animation = 0;
+
+      for (let [uid, fighterConfig] of Object.entries(this.config.fighters)) {
+        this.state.fighters[uid] = new Fighter(fighterConfig);
+      }
+
+      // Just set this placeholder fighter for now.
+      this.state.fighter = this.state.fighters["subzero"];
+
+    //  this.animations = [];
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.walk_forward));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.walk_backward));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.standing));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.standing_punch));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.standing_kick));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.standing_block));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.standing_hit));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.upper_cut));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.spinkick));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.spinkick_blocked));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.leg_sweep));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.ducking));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.ducking_kick));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.ducking_block));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.ducking_hit));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.jumping_up));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.jumping_around));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.jumping_punch));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.jumping_kick));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.falling_back));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.falling_sweep));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.hopping_up));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.special));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.dizzy));
+    //  this.animations.push(loadAnimationFromConfig(this.config.fighters.subzero.imgs.victory));
       this.state.firstUpdate = false;
     }
 
@@ -131,8 +140,7 @@ class Game {
     //  }
     //}
 
-    let curr = this.curr_animation % this.animations.length;
-    this.animations[curr].update();
+    this.state.fighter.update();
   }
 
   _scaleMouse(pos) {
@@ -178,12 +186,11 @@ class Game {
       line(0, 233, width, 233);
       circle(110, 233, 10);
       circle(155, 233, 10);
-      let curr = this.curr_animation % this.animations.length;
-      if (this.animations[curr] != null) {
-        let scaledMouseX = this._scaleMouse(mouseX);
-        let scaledMouseY = this._scaleMouse(mouseY);
+      if (this.state.fighter != undefined) {
+        //let scaledMouseX = this._scaleMouse(mouseX);
+        //let scaledMouseY = this._scaleMouse(mouseY);
         //this.animations[curr].draw(scaledMouseX+30, scaledMouseY+30);
-        this.animations[curr].draw(100, 100);
+        this.state.fighter.draw();  //this.animations[curr].draw(100, 100);
       }
       pop();
     }
@@ -223,9 +230,7 @@ class Game {
       return;
     }
 
-    let curr = this.curr_animation % this.animations.length;
-    this.animations[curr].reset();
-    this.curr_animation++;
+    this.state.fighter.nextAnimation();
     return;
   }
 
