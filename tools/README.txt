@@ -28,8 +28,6 @@ Some bugs that we encountered:
     relevant when they are much larger than the "blue" and "red" values. We
     got a good result through exploration and happy accidents, but it will need
     further tuning.
-  * There is some javascript weirdness that I need to figure out, but the
-    current example has a lot of hardcoded images in it.
 
 The goal is:
 
