@@ -2,7 +2,14 @@
 let r_slider;
 let g_slider;
 let b_slider;
+let fps_slider;
+
 let counter = 0;
+
+const canvasWidth = 720;
+const canvasHeight = 600;
+const frameWidth = 1080;
+const frameHeight = 1920;
 
 const imgs = [];
 
@@ -20,14 +27,12 @@ function preload() {
 
 function setup() {
   g_slider = createSlider(0, 255, 156);
-
   r_slider = createSlider(0, 255, 150);
   b_slider = createSlider(0, 255, 255);
+  fps_slider = createSlider(0, 60, 10);
 
-  //createCanvas(1080, 1920);
-  //createCanvas(370, 650);
-  createCanvas(720, 1280);
-  frameRate(10);
+  createCanvas(canvasWidth, canvasHeight);
+  frameRate(fps_slider.value());
 
   for (let img of imgs) {
     img.loadPixels();
@@ -56,14 +61,23 @@ function setup() {
 }
 
 function draw() {
-  clear();
+  frameRate(fps_slider.value());
   background(60,0,0);
-  
-  // Draw the image.
-  //image(img, 0, 0, 1080, 1920, 480, 640);
-  //image(img, 0, 0, 360, 640);
 
-  //console.log("Drawing " + counter % 9);
-  image(imgs[counter % 9], 0, 0, 720*3/4, 1280*3*.6923/4, 150, 525, 820, 810);
+  const boundingBoxX = 150;
+  const boundingBoxY = 525;
+  const boundingBoxWidth = 820;
+  const boundingBoxHeight = 810;
+  const boundingBoxRatio = boundingBoxWidth / boundingBoxHeight;
+
+  const dstTargetWidth = canvasWidth*1/4;
+  const dstTargetHeight = dstTargetWidth / boundingBoxRatio;
+
+  image(imgs[counter % 9],
+        /*dstX=*/0, /*dstY=*/0,
+        dstTargetWidth, dstTargetHeight,
+        boundingBoxX, boundingBoxY,
+        boundingBoxWidth, boundingBoxHeight);
+
   counter++;
 }
